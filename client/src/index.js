@@ -7,11 +7,13 @@ import {Provider} from "react-redux";
 import {createStore, applyMiddleware} from "redux";
 import viewerApp from "./reducers/index";
 import thunk from 'redux-thunk';
+import {fetchNamespaces} from "./actions/index";
 
 let store = createStore(
   viewerApp,
   applyMiddleware(thunk)
 );
+store.dispatch(fetchNamespaces());
 
 render(
   <Provider store={store}>

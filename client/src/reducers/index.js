@@ -1,8 +1,10 @@
 import {combineReducers} from 'redux'
 import selection from "../actions/selection";
+import repository from "../actions/repository";
 
 const viewerApp = combineReducers({
-  selection
+  selection,
+  repository
 });
 
 export default viewerApp

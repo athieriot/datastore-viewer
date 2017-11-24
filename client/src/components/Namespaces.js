@@ -8,7 +8,8 @@ import {selectNamespace} from "../actions/index";
 
 const mapStateToProps = state => {
   return {
-    namespace: state.selection.get("namespace")
+    namespace: state.selection.get("namespace"),
+    namespaces: state.repository.get("namespaces")
   };
 };
 
@@ -36,7 +37,9 @@ class Namespaces extends Component {
           <MenuItem value="default">
             <em>default</em>
           </MenuItem>
-          <MenuItem value={"partner-service"}>partner-service</MenuItem>
+          {this.props.namespaces.map(n =>
+            <MenuItem key={n} value={n}>{n}</MenuItem>
+          )}
         </Select>
       </FormControl>
     );

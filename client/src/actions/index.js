@@ -1,10 +1,14 @@
 // import fetch from 'cross-fetch'
 
 export const selectNamespace = namespace => {
-  return {
-    type: 'SELECT_NAMESPACE',
-    namespace
-  }
+  return (dispatch, getState) => {
+    dispatch(fetchKinds(namespace));
+
+    return {
+      type: 'SELECT_NAMESPACE',
+      namespace
+    }
+  };
 };
 
 export const selectKind = kind => {
@@ -14,27 +18,49 @@ export const selectKind = kind => {
   }
 };
 
-export const fetchNamespace = () => {
+export const receivedNamespaces = (namespaces) => {
   return {
-    type: 'FETCH_NAMESPACES'
+    type: 'RECEIVED_NAMESPACES',
+    namespaces
   }
 };
 
-// export function fetchPosts(subreddit) {
-//
-//   return function (dispatch) {
-//     // dispatch(requestPosts(subreddit))
-//     return fetch(`https://www.reddit.com/r/${subreddit}.json`)
-//       .then(
-//         response => response.json(),
-//         // Do not use catch, because that will also catch
-//         // any errors in the dispatch and resulting render,
-//         // causing a loop of 'Unexpected batch number' errors.
-//         // https://github.com/facebook/react/issues/6895
-//         error => console.log('An error occurred.', error)
-//       )
-//       .then(json =>
-//         dispatch(receivePosts(subreddit, json))
-//       )
-//   }
-// };
+export const receivedKinds = (kinds) => {
+  return {
+    type: 'RECEIVED_KINDS',
+    kinds
+  }
+};
+
+export function fetchNamespaces() {
+
+  return function (dispatch) {
+    return fetch('/api/namespaces')
+      .then(
+        response => response.json(),
+        // Do not use catch, because that will also catch
+        // any errors in the dispatch and resulting render,
+        // causing a loop of 'Unexpected batch number' errors.
+        // https://github.com/facebook/react/issues/6895
+        error => console.log('An error occurred.', error)
+      )
+      .then(json => {
+        return dispatch(receivedNamespaces(json))
+      })
+  }
+};
+
+export function fetchKinds(namespace) {
+
+  return function (dispatch) {
+    return fetch('/api/namespaces/' + namespace + "/kinds")
+      .then(
+        response => response.json(),
+        error => console.log('An error occurred.', error)
+      )
+      .then(json => {
+        dispatch(receivedKinds(json));
+        return dispatch(selectKind(json[0] ? json[0] : ""))
+      })
+  }
+};
