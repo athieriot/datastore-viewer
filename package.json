@@ -6,7 +6,9 @@
   },
   "dependencies": {
     "@google-cloud/datastore": "^1.1.0",
-    "hapi": "^17.1.1"
+    "hapi": "^17.1.1",
+    "material-design-icons": "^3.0.1",
+    "material-ui-icons": "^1.0.0-beta.17"
   },
   "devDependencies": {
     "concurrently": "^3.5.1"
