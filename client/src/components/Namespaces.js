@@ -34,9 +34,6 @@ class Namespaces extends Component {
           onChange={event => this.props.onNamespaceChange(event.target.value)}
           input={<Input id="namespace"/>}
         >
-          <MenuItem value="default">
-            <em>default</em>
-          </MenuItem>
           {this.props.namespaces.map(n =>
             <MenuItem key={n} value={n}>{n}</MenuItem>
           )}

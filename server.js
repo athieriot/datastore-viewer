@@ -13,7 +13,7 @@ server.route({
 
     return Datastore({projectId: 'default'})
       .createQuery('__namespace__').select('__key__').run()
-      .then(entities => entities[0].map(e => e[Datastore.KEY].name))
+      .then(entities => ["-"].concat(entities[0].map(e => e[Datastore.KEY].name)))
       .catch((err) => err);
   }
 });
@@ -24,9 +24,30 @@ server.route({
   handler: function (request, reply) {
     process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
 
+    //TODO: Testing if default namespace is used correctly
+    let namespace = request.params.namespace === "-" ? null : request.params.namespace;
     return Datastore({projectId: 'default'})
-      .createQuery(request.params.namespace, '__kind__').select('__key__').run()
+      .createQuery(namespace, '__kind__').select('__key__').run()
       .then(entities => entities[0].map(e => e[Datastore.KEY].name))
+      .catch((err) => err);
+  }
+});
+
+server.route({
+  method: 'GET',
+  path: '/api/namespaces/{namespace}/kinds/{kind}',
+  handler: function (request, reply) {
+    process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
+
+    let namespace = request.params.namespace === "-" ? null : request.params.namespace;
+    return Datastore({projectId: 'default'})
+      .createQuery(namespace, request.params.kind).run()
+      .then(entities => {
+        return entities[0].map(e => {
+          e["key"] = "name=" + e[Datastore.KEY].name;
+          return e;
+        });
+      })
       .catch((err) => err);
   }
 });
@@ -42,10 +63,12 @@ server.route({
 
     const kind = 'Task';
     const name = 'sampletask1';
-    const taskKey = datastore.key({
-      namespace: 'stuff',
-      path: [kind, name]
-    });
+    // const taskKey = datastore.key({
+    //   namespace: 'stuff',
+    //   path: [kind, name]
+    // });
+
+    const taskKey = datastore.key([kind, name]);
 
     const task = {
       key: taskKey,

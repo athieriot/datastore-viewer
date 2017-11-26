@@ -1,21 +1,26 @@
-// import fetch from 'cross-fetch'
+import fetch from 'cross-fetch'
 
 export const selectNamespace = namespace => {
   return (dispatch, getState) => {
     dispatch(fetchKinds(namespace));
-
-    return {
-      type: 'SELECT_NAMESPACE',
-      namespace
-    }
+    dispatch({
+        type: 'SELECT_NAMESPACE',
+        namespace
+    });
   };
 };
 
 export const selectKind = kind => {
-  return {
-    type: 'SELECT_KIND',
-    kind
-  }
+  return (dispatch, getState) => {
+    if (kind !== "") {
+      dispatch(fetchEntities(getState().selection.get('namespace'), kind));
+    }
+
+    dispatch({
+      type: 'SELECT_KIND',
+      kind
+    })
+  };
 };
 
 export const receivedNamespaces = (namespaces) => {
@@ -32,9 +37,24 @@ export const receivedKinds = (kinds) => {
   }
 };
 
+export const fetchingEntities = () => {
+  return {
+    type: 'FETCHING_ENTITIES'
+  }
+};
+
+export const receivedEntities = (entities) => {
+  return {
+    type: 'RECEIVED_ENTITIES',
+    entities
+  }
+};
+
 export function fetchNamespaces() {
 
   return function (dispatch) {
+    dispatch(fetchingEntities());
+
     return fetch('/api/namespaces')
       .then(
         response => response.json(),
@@ -48,7 +68,7 @@ export function fetchNamespaces() {
         return dispatch(receivedNamespaces(json))
       })
   }
-};
+}
 
 export function fetchKinds(namespace) {
 
@@ -63,4 +83,18 @@ export function fetchKinds(namespace) {
         return dispatch(selectKind(json[0] ? json[0] : ""))
       })
   }
-};
+}
+
+export function fetchEntities(namespace, kind) {
+
+  return function (dispatch) {
+    return fetch('/api/namespaces/' + namespace + "/kinds/" + kind)
+      .then(
+        response => response.json(),
+        error => console.log('An error occurred.', error)
+      )
+      .then(json => {
+        dispatch(receivedEntities(json));
+      })
+  }
+}

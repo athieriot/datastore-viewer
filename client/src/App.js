@@ -4,15 +4,13 @@ import {withStyles} from "material-ui";
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
-import { red, green } from 'material-ui/colors';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
   },
   container: {
-    marginTop: 10,
-    marginLeft: 10,
+    margin: 10,
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -26,8 +24,6 @@ const styles = theme => ({
     marginRight: 20,
   },
 });
-
-const primary = red[500];
 
 class App extends Component {
 
