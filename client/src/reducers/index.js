@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
-import selection from "../actions/selection";
-import repository from "../actions/repository";
+import selection from "../reducers/selection";
+import repository from "../reducers/repository";
 
 const viewerApp = combineReducers({
   selection,

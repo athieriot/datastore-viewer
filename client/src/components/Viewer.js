@@ -2,32 +2,7 @@ import React, {Component} from 'react';
 import Namespaces from "./Namespaces";
 import Kinds from "./Kinds";
 import Grid from 'material-ui/Grid';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-import {connect} from "react-redux";
-import Paper from 'material-ui/Paper';
-import { List } from 'immutable';
-
-//TODO: Split Entity table in another Component
-const mapStateToProps = state => {
-  let columns = List();
-
-  let first = state.repository.get('entities')[0] || {};
-
-
-  console.log(first);
-  for (let property in first) {
-    if (first.hasOwnProperty(property)) {
-      columns = columns.push(property)
-    }
-  }
-  console.log(columns);
-
-  return {
-    loading: state.repository.get("loading"),
-    columns: columns.filter(c => c !== "key").take(4),
-    entities: state.repository.get("entities")
-  };
-};
+import Entities from "./Entities";
 
 class Viewer extends Component {
 
@@ -44,34 +19,7 @@ class Viewer extends Component {
             <Kinds classes={classes}/>
           </Grid>
           <Grid item xs={12}>
-            <Paper>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name/ID</TableCell>
-                    {this.props.columns.map(c => {
-                      return (
-                        <TableCell key={c}>{c}</TableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.props.entities.map(n => {
-                    return (
-                      <TableRow key={n.key}>
-                        <TableCell>{n.key}</TableCell>
-                        {this.props.columns.map(c => {
-                          return (
-                            <TableCell key={n.key+c}>{n[c]}</TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </Paper>
+            <Entities classes={classes} />
           </Grid>
         </Grid>
       </form>
@@ -79,4 +27,4 @@ class Viewer extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Viewer);
+export default Viewer;

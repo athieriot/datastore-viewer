@@ -24,10 +24,13 @@ export const selectKind = kind => {
 };
 
 export const receivedNamespaces = (namespaces) => {
-  return {
-    type: 'RECEIVED_NAMESPACES',
-    namespaces
-  }
+  return (dispatch, getState) => {
+    dispatch(selectNamespace(namespaces[0] ? namespaces[0] : "default"));
+    dispatch({
+      type: 'RECEIVED_NAMESPACES',
+      namespaces
+    });
+  };
 };
 
 export const receivedKinds = (kinds) => {
@@ -53,8 +56,6 @@ export const receivedEntities = (entities) => {
 export function fetchNamespaces() {
 
   return function (dispatch) {
-    dispatch(fetchingEntities());
-
     return fetch('/api/namespaces')
       .then(
         response => response.json(),
@@ -88,6 +89,8 @@ export function fetchKinds(namespace) {
 export function fetchEntities(namespace, kind) {
 
   return function (dispatch) {
+    dispatch(fetchingEntities());
+
     return fetch('/api/namespaces/' + namespace + "/kinds/" + kind)
       .then(
         response => response.json(),

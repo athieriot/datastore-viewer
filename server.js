@@ -13,7 +13,7 @@ server.route({
 
     return Datastore({projectId: 'default'})
       .createQuery('__namespace__').select('__key__').run()
-      .then(entities => ["-"].concat(entities[0].map(e => e[Datastore.KEY].name)))
+      .then(entities => entities[0].map(e => e[Datastore.KEY].name).map(e => !e ? "default" : e))
       .catch((err) => err);
   }
 });
@@ -24,10 +24,7 @@ server.route({
   handler: function (request, reply) {
     process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
 
-    //TODO: Testing if default namespace is used correctly
-    let namespace = request.params.namespace === "-" ? null : request.params.namespace;
-    return Datastore({projectId: 'default'})
-      .createQuery(namespace, '__kind__').select('__key__').run()
+    return toNamespaceQuery(request.params.namespace, "__kind__").select('__key__').run()
       .then(entities => entities[0].map(e => e[Datastore.KEY].name))
       .catch((err) => err);
   }
@@ -39,12 +36,10 @@ server.route({
   handler: function (request, reply) {
     process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
 
-    let namespace = request.params.namespace === "-" ? null : request.params.namespace;
-    return Datastore({projectId: 'default'})
-      .createQuery(namespace, request.params.kind).run()
+    return toNamespaceQuery(request.params.namespace, request.params.kind).run()
       .then(entities => {
         return entities[0].map(e => {
-          e["key"] = "name=" + e[Datastore.KEY].name;
+          e["key"] = e[Datastore.KEY].name;
           return e;
         });
       })
@@ -52,28 +47,46 @@ server.route({
   }
 });
 
+function toNamespaceQuery(namespace, kind) {
+  if (namespace === "default") {
+    return Datastore({projectId: 'default'}).createQuery(kind);
+  } else {
+    return Datastore({projectId: 'default'}).createQuery(namespace, kind);
+  }
+
+}
+
 server.route({
   method: 'GET',
-  path: '/api/populate',
+  path: '/api/populate/{namespace}/{kind}/{id}',
   handler: function (request, reply) {
     // Instantiates a client
     const datastore = Datastore({
       projectId: "default"
     });
 
-    const kind = 'Task';
-    const name = 'sampletask1';
-    // const taskKey = datastore.key({
-    //   namespace: 'stuff',
-    //   path: [kind, name]
-    // });
+    let namespace = request.params.namespace;
+    let kind = request.params.kind;
+    let name = request.params.id;
+    let taskKey;
 
-    const taskKey = datastore.key([kind, name]);
+    if (namespace === "default") {
+      taskKey = datastore.key([kind, name]);
+    } else {
+      taskKey = datastore.key({
+        namespace: namespace,
+        path: [kind, name]
+      });
+    }
 
     const task = {
       key: taskKey,
       data: {
-        description: 'Buy milk'
+        description: 'Buy milk',
+        content: {
+          email: "ksdjfkdj@gmail.com",
+          phone: "015467874"
+        }
       }
     };
 
