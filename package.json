@@ -2,7 +2,8 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server.js",
-    "client": "cd client && npm start"
+    "client": "cd client && npm start",
+    "build": "cd client && npm build"
   },
   "dependencies": {
     "@google-cloud/datastore": "^1.1.0",

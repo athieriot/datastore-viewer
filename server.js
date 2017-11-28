@@ -2,14 +2,17 @@
 
 const Hapi = require('hapi');
 
-const server = Hapi.server({ port: 3001, host: 'localhost' });
+if (!process.env['DATASTORE_EMULATOR_HOST']) {
+    process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
+}
+
+const server = Hapi.server({ port: 3001, address: "0.0.0.0", host: "localhost" });
 const Datastore = require('@google-cloud/datastore');
 
 server.route({
   method: 'GET',
   path: '/api/namespaces',
   handler: function (request, reply) {
-    process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
 
     return Datastore({projectId: 'default'})
       .createQuery('__namespace__').select('__key__').run()
@@ -22,7 +25,6 @@ server.route({
   method: 'GET',
   path: '/api/namespaces/{namespace}/kinds',
   handler: function (request, reply) {
-    process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
 
     return toNamespaceQuery(request.params.namespace, "__kind__").select('__key__').run()
       .then(entities => entities[0].map(e => e[Datastore.KEY].name))
@@ -34,7 +36,6 @@ server.route({
   method: 'GET',
   path: '/api/namespaces/{namespace}/kinds/{kind}',
   handler: function (request, reply) {
-    process.env['DATASTORE_EMULATOR_HOST'] = 'localhost:8432';
 
     return toNamespaceQuery(request.params.namespace, request.params.kind).run()
       .then(entities => {

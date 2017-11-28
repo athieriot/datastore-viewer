@@ -12,10 +12,10 @@ class Viewer extends Component {
     return (
       <form autoComplete="off">
         <Grid container spacing={24}>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12}>
             <Namespaces classes={classes} />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12}>
             <Kinds classes={classes}/>
           </Grid>
           <Grid item xs={12}>
