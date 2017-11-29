@@ -1,4 +1,5 @@
 import fetch from 'cross-fetch'
+import { push } from 'react-router-redux'
 
 export const selectNamespace = namespace => {
   return (dispatch, getState) => {
@@ -12,6 +13,7 @@ export const selectNamespace = namespace => {
 
 export const selectKind = kind => {
   return (dispatch, getState) => {
+    dispatch(push('/namespaces/' + getState().selection.get('namespace') + "/kinds/" + kind));
     if (kind !== "") {
       dispatch(fetchEntities(getState().selection.get('namespace'), kind));
     }
