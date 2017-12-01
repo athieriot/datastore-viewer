@@ -13,7 +13,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     onNamespaceChange: namespace => {
       dispatch(selectNamespace(namespace))
@@ -22,6 +22,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 class Namespaces extends Component {
+
+  componentDidMount() {
+    this.props.onNamespaceChange(this.props.initValue)
+  }
 
   render() {
     const {classes} = this.props;

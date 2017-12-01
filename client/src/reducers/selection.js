@@ -1,9 +1,9 @@
 import { Map } from 'immutable'
 
-const selection = (state = Map({ namespace: "-", kind: "" }), action) => {
+const selection = (state = Map({ namespace: "default", kind: "" }), action) => {
   switch (action.type) {
     case 'SELECT_NAMESPACE':
-      return state.set("namespace", action.namespace);
+      return state.set("namespace", action.namespace).set("kind", "");
     case 'SELECT_KIND':
       return state.set("kind", action.kind);
     default:

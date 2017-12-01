@@ -22,6 +22,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 class Kinds extends Component {
+
+  componentDidMount() {
+    this.props.onKindChange(this.props.initValue)
+  }
+
   render() {
     const { classes } = this.props;
 

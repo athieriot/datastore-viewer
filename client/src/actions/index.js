@@ -3,31 +3,32 @@ import { push } from 'react-router-redux'
 
 export const selectNamespace = namespace => {
   return (dispatch, getState) => {
-    dispatch(fetchKinds(namespace));
-    dispatch({
+    if (namespace) {
+      dispatch(push('/namespaces/' + namespace));
+      dispatch(fetchKinds(namespace));
+      dispatch({
         type: 'SELECT_NAMESPACE',
         namespace
-    });
+      });
+    }
   };
 };
 
 export const selectKind = kind => {
   return (dispatch, getState) => {
-    dispatch(push('/namespaces/' + getState().selection.get('namespace') + "/kinds/" + kind));
-    if (kind !== "") {
+    if (kind && kind !== "") {
+      dispatch(push("/namespaces/" + getState().selection.get('namespace') + "/kinds/" + kind));
       dispatch(fetchEntities(getState().selection.get('namespace'), kind));
+      dispatch({
+        type: 'SELECT_KIND',
+        kind
+      });
     }
-
-    dispatch({
-      type: 'SELECT_KIND',
-      kind
-    })
   };
 };
 
 export const receivedNamespaces = (namespaces) => {
-  return (dispatch, getState) => {
-    dispatch(selectNamespace(namespaces[0] ? namespaces[0] : "default"));
+  return (dispatch) => {
     dispatch({
       type: 'RECEIVED_NAMESPACES',
       namespaces
@@ -36,10 +37,16 @@ export const receivedNamespaces = (namespaces) => {
 };
 
 export const receivedKinds = (kinds) => {
-  return {
-    type: 'RECEIVED_KINDS',
-    kinds
-  }
+  return (dispatch, getState) => {
+    //TODO: Is this the right place for such an action?
+    if (kinds.length > 0 && !getState().selection.get("kind")) {
+      dispatch(selectKind(kinds[0]))
+    }
+    dispatch({
+      type: 'RECEIVED_KINDS',
+      kinds
+    })
+  };
 };
 
 export const fetchingEntities = () => {
@@ -57,7 +64,7 @@ export const receivedEntities = (entities) => {
 
 export function fetchNamespaces() {
 
-  return function (dispatch) {
+  return (dispatch) => {
     return fetch('/api/namespaces')
       .then(
         response => response.json(),
@@ -75,15 +82,14 @@ export function fetchNamespaces() {
 
 export function fetchKinds(namespace) {
 
-  return function (dispatch) {
+  return (dispatch, getState) => {
     return fetch('/api/namespaces/' + namespace + "/kinds")
       .then(
         response => response.json(),
         error => console.log('An error occurred.', error)
       )
       .then(json => {
-        dispatch(receivedKinds(json));
-        return dispatch(selectKind(json[0] ? json[0] : ""))
+        return dispatch(receivedKinds(json));
       })
   }
 }

@@ -35,10 +35,10 @@ class Viewer extends Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>Key</TableCell>
-              {this.props.columns.map(column => {
+              <TableCell>Name/ID</TableCell>
+              {this.props.columns.map(columns => {
                 return (
-                  <TableCell key={column}><strong>{column}</strong></TableCell>
+                  <TableCell key={columns}><strong>{columns}</strong></TableCell>
                 );
               })}
             </TableRow>
@@ -48,9 +48,9 @@ class Viewer extends Component {
               return (
                 <TableRow key={entity.key}>
                   <TableCell>{entity.key}</TableCell>
-                  {this.props.columns.map(column => {
+                  {this.props.columns.map(c => {
                     return (
-                      <TableCell key={entity.key+column}>{JSON.stringify(entity[column])}</TableCell>
+                      <TableCell key={entity.key+c}>{JSON.stringify(entity[c])}</TableCell>
                     );
                   })}
                 </TableRow>
