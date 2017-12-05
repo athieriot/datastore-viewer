@@ -50,7 +50,7 @@ class Viewer extends Component {
                   <TableCell>{entity.key}</TableCell>
                   {this.props.columns.map(c => {
                     return (
-                      <TableCell key={entity.key+c}>{JSON.stringify(entity[c])}</TableCell>
+                      <TableCell key={entity.key+c}><div className={classes.truncate}>{JSON.stringify(entity[c])}</div></TableCell>
                     );
                   })}
                 </TableRow>

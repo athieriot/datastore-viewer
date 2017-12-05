@@ -39,7 +39,7 @@ class Kinds extends Component {
           input={<Input id="kind" />}
         >
           {this.props.kinds.map(k =>
-            <MenuItem key={k} value={k}>{k}</MenuItem>
+            <MenuItem key={k} value={k}><div className={classes.truncate}>{k}</div></MenuItem>
           )}
         </Select>
       </FormControl>

@@ -13,12 +13,12 @@ class Viewer extends Component {
     return (
       <form autoComplete="off">
         <Grid container spacing={24}>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <Route path="/namespaces/:namespace" children={({ match }) => (
               <Namespaces initValue={match ? match.params.namespace : false} classes={classes}/>
             )}/>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <Route path="/namespaces/:namespace/kinds/:kind" children={({ match }) => (
               <Kinds initValue={match ? match.params.kind : false} classes={classes}/>
             )}/>

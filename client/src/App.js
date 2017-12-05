@@ -14,7 +14,7 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 240,
+    minWidth: 350,
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
@@ -23,6 +23,12 @@ const styles = theme => ({
     marginLeft: -12,
     marginRight: 20,
   },
+  truncate: {
+    width: 350,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  }
 });
 
 class App extends Component {

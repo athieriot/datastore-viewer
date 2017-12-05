@@ -39,7 +39,9 @@ class Namespaces extends Component {
           input={<Input id="namespace"/>}
         >
           {this.props.namespaces.map(n =>
-            <MenuItem key={n} value={n}>{n}</MenuItem>
+            <MenuItem key={n} value={n}>
+              <div className={classes.truncate}>{n}</div>
+            </MenuItem>
           )}
         </Select>
       </FormControl>
