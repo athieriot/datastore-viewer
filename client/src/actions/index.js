@@ -62,6 +62,13 @@ export const receivedEntities = (entities) => {
   }
 };
 
+export const selectEntity = (entity) => {
+  return {
+    type: 'SELECT_ENTITY',
+    entity
+  }
+};
+
 export function fetchNamespaces() {
 
   return (dispatch) => {

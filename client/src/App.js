@@ -9,6 +9,9 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  appBar: {
+    position: 'relative',
+  },
   container: {
     margin: 10,
   },

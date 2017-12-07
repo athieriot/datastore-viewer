@@ -3,6 +3,7 @@ import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Tabl
 import {connect} from "react-redux";
 import Paper from 'material-ui/Paper';
 import {List} from 'immutable';
+import {selectEntity} from "../actions/index";
 
 const MAX_NUMBER_OF_COLUMNS = 4;
 
@@ -26,6 +27,14 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onEntityClick: entity => {
+      dispatch(selectEntity(entity))
+    }
+  }
+};
+
 class Viewer extends Component {
 
   render() {
@@ -46,11 +55,13 @@ class Viewer extends Component {
           <TableBody>
             {this.props.entities.map(entity => {
               return (
-                <TableRow key={entity.key}>
+                <TableRow key={entity.key} hover onClick={event => this.props.onEntityClick(entity)}>
                   <TableCell>{entity.key}</TableCell>
                   {this.props.columns.map(c => {
                     return (
-                      <TableCell key={entity.key+c}><div className={classes.truncate}>{JSON.stringify(entity[c])}</div></TableCell>
+                      <TableCell key={entity.key+c}>
+                        <div className={classes.truncate}>{JSON.stringify(entity[c])}</div>
+                      </TableCell>
                     );
                   })}
                 </TableRow>
@@ -63,4 +74,4 @@ class Viewer extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Viewer);
+export default connect(mapStateToProps, mapDispatchToProps)(Viewer);

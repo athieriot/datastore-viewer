@@ -4,6 +4,7 @@ import Kinds from "./Kinds";
 import Grid from 'material-ui/Grid';
 import Entities from "./Entities";
 import {Route} from "react-router-dom";
+import Entity from "./Entity";
 
 class Viewer extends Component {
 
@@ -27,6 +28,7 @@ class Viewer extends Component {
             <Entities classes={classes}/>
           </Grid>
         </Grid>
+        <Entity classes={classes}/>
       </form>
     );
   }
